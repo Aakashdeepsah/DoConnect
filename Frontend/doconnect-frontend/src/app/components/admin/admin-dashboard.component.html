@@ -1,0 +1,88 @@
+<div class="page-wrapper">
+  <div class="admin-header">
+    <div>
+      <h2>🛡 Admin Dashboard</h2>
+      <p class="subtitle">Review and moderate questions and answers</p>
+    </div>
+    <div class="pending-badge" *ngIf="pendingCount > 0">{{ pendingCount }} pending review</div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn" [class.active]="activeTab==='questions'" (click)="activeTab='questions'">
+      Questions <span class="tab-count">{{ questions.length }}</span>
+    </button>
+    <button class="tab-btn" [class.active]="activeTab==='answers'" (click)="activeTab='answers'; loadAnswers()">
+      Answers <span class="tab-count">{{ answers.length }}</span>
+    </button>
+  </div>
+
+  <div class="alert alert-success" *ngIf="successMessage">{{ successMessage }}</div>
+  <div class="alert alert-error"   *ngIf="errorMessage">{{ errorMessage }}</div>
+  <div class="loading-state" *ngIf="isLoading"><div class="spinner"></div><p>Loading...</p></div>
+
+  <!-- QUESTIONS TAB -->
+  <div *ngIf="activeTab==='questions' && !isLoading">
+    <div class="filter-bar">
+      <button class="filter-btn" [class.active]="questionFilter==='All'"      (click)="questionFilter='All'">All</button>
+      <button class="filter-btn" [class.active]="questionFilter==='Pending'"  (click)="questionFilter='Pending'">Pending</button>
+      <button class="filter-btn" [class.active]="questionFilter==='Approved'" (click)="questionFilter='Approved'">Approved</button>
+      <button class="filter-btn" [class.active]="questionFilter==='Rejected'" (click)="questionFilter='Rejected'">Rejected</button>
+    </div>
+    <p class="empty-msg" *ngIf="filteredQuestions.length===0">No questions for this filter.</p>
+    <div class="admin-card card" *ngFor="let q of filteredQuestions">
+      <div class="admin-card-header">
+        <div class="admin-card-meta">
+          <span class="topic-tag">{{ q.topic }}</span>
+          <span class="badge badge-{{ q.status.toLowerCase() }}">{{ q.status }}</span>
+          <span class="meta-user">👤 {{ q.username }}</span>
+          <span class="meta-date">{{ q.createdAt | date:'MMM d, y' }}</span>
+        </div>
+      </div>
+      <h4 class="admin-item-title">{{ q.title }}</h4>
+      <p class="admin-item-body">{{ q.questionText }}</p>
+      <div class="image-container" *ngIf="q.imageUrl">
+        <p class="image-label">📎 Attached Image:</p>
+        <img [src]="q.imageUrl" alt="Question image" class="admin-image"
+          (error)="onImageError($event)" (load)="onImageLoad($event)"/>
+      </div>
+      <div class="admin-actions">
+        <button class="btn btn-success" (click)="approveQuestion(q.questionId)" [disabled]="q.status==='Approved'">✅ Approve</button>
+        <button class="btn btn-warning" (click)="rejectQuestion(q.questionId)"  [disabled]="q.status==='Rejected'">❌ Reject</button>
+        <button class="btn btn-danger"  (click)="deleteQuestion(q.questionId)">🗑 Delete</button>
+        <a [routerLink]="['/question', q.questionId]" class="btn btn-outline" target="_blank">👁 View</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANSWERS TAB -->
+  <div *ngIf="activeTab==='answers' && !isLoading">
+    <div class="filter-bar">
+      <button class="filter-btn" [class.active]="answerFilter==='All'"      (click)="answerFilter='All'">All</button>
+      <button class="filter-btn" [class.active]="answerFilter==='Pending'"  (click)="answerFilter='Pending'">Pending</button>
+      <button class="filter-btn" [class.active]="answerFilter==='Approved'" (click)="answerFilter='Approved'">Approved</button>
+      <button class="filter-btn" [class.active]="answerFilter==='Rejected'" (click)="answerFilter='Rejected'">Rejected</button>
+    </div>
+    <p class="empty-msg" *ngIf="filteredAnswers.length===0">No answers for this filter.</p>
+    <div class="admin-card card" *ngFor="let a of filteredAnswers">
+      <div class="admin-card-header">
+        <div class="admin-card-meta">
+          <span class="badge badge-{{ a.status.toLowerCase() }}">{{ a.status }}</span>
+          <span class="meta-user">👤 {{ a.username }}</span>
+          <span class="meta-date">{{ a.createdAt | date:'MMM d, y' }}</span>
+          <span class="meta-qid">For Question #{{ a.questionId }}</span>
+        </div>
+      </div>
+      <p class="admin-item-body">{{ a.answerText }}</p>
+      <div class="image-container" *ngIf="a.imageUrl">
+        <p class="image-label">📎 Attached Image:</p>
+        <img [src]="a.imageUrl" alt="Answer image" class="admin-image"
+          (error)="onImageError($event)" (load)="onImageLoad($event)"/>
+      </div>
+      <div class="admin-actions">
+        <button class="btn btn-success" (click)="approveAnswer(a.answerId)" [disabled]="a.status==='Approved'">✅ Approve</button>
+        <button class="btn btn-warning" (click)="rejectAnswer(a.answerId)"  [disabled]="a.status==='Rejected'">❌ Reject</button>
+        <button class="btn btn-danger"  (click)="deleteAnswer(a.answerId)">🗑 Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

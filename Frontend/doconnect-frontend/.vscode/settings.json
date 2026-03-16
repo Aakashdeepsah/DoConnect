@@ -1,0 +1,18 @@
+{
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "editor.wordWrap": "on",
+  "typescript.preferences.quoteStyle": "single",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "files.associations": {
+    "*.component.html": "html",
+    "*.component.css": "css"
+  },
+  "files.exclude": {
+    "node_modules": true,
+    "dist": true,
+    ".angular": true
+  },
+  "emmet.includeLanguages": { "html": "html" }
+}

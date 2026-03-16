@@ -1,0 +1,60 @@
+<div class="auth-wrapper">
+  <div class="auth-card card">
+
+    <div class="auth-header">
+      <a routerLink="/" class="back-link">← Back</a>
+      <div class="auth-logo">⚡</div>
+      <h2>Create your account</h2>
+      <p>Join DoConnect and start asking questions</p>
+    </div>
+
+    <div class="alert alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <form (ngSubmit)="onRegister()" #f="ngForm" novalidate>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" name="username" [(ngModel)]="username"
+          placeholder="e.g. john_doe" required minlength="3" #uf="ngModel"/>
+        <span class="field-error" *ngIf="uf.invalid && uf.touched">
+          At least 3 characters required.
+        </span>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" [(ngModel)]="email"
+          placeholder="you@example.com" required #ef="ngModel"/>
+        <span class="field-error" *ngIf="ef.invalid && ef.touched">
+          Please enter a valid email.
+        </span>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" [(ngModel)]="password"
+          placeholder="Min. 6 characters" required minlength="6" #pf="ngModel"/>
+        <span class="field-error" *ngIf="pf.invalid && pf.touched">
+          Password must be at least 6 characters.
+        </span>
+      </div>
+
+      <!-- FIX: No role selector. All registrations create a "User" account.
+           Admin accounts are created only via database seed by the system admin. -->
+      <div class="account-type-note">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
+        </svg>
+        All registered accounts are <strong>User</strong> accounts.
+        Admin access is granted by the system administrator only.
+      </div>
+
+      <button type="submit" class="btn btn-primary full-width"
+        [disabled]="isLoading || f.invalid">
+        <span class="spinner" *ngIf="isLoading"></span>
+        {{ isLoading ? 'Creating account...' : 'Create Account' }}
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Already have an account? <a routerLink="/login">Sign in</a>
+    </p>
+  </div>
+</div>

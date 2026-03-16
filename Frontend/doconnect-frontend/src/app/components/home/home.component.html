@@ -1,0 +1,53 @@
+<div class="page-wrapper">
+  <div class="page-header">
+    <div>
+      <h1>Questions</h1>
+      <p class="subtitle">Browse and search community questions</p>
+    </div>
+    <a routerLink="/ask" class="btn btn-primary" *ngIf="isLoggedIn">+ Ask Question</a>
+  </div>
+
+  <div class="search-section">
+    <input type="text" class="search-bar"
+      placeholder="Search by keyword, topic, or title..."
+      [(ngModel)]="searchQuery"
+      (input)="onSearchInput()"
+      (keyup.enter)="doSearch()" />
+    <button class="btn btn-primary" (click)="doSearch()">Search</button>
+    <button class="btn btn-outline" (click)="clearSearch()" *ngIf="isSearching">Clear</button>
+  </div>
+
+  <p class="result-label" *ngIf="isSearching">
+    Showing results for "<strong>{{ activeSearchQuery }}</strong>" — {{ questions.length }} found
+  </p>
+
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner"></div><p>Loading questions...</p>
+  </div>
+
+  <div class="alert alert-error" *ngIf="errorMessage && !isLoading">{{ errorMessage }}</div>
+
+  <div class="empty-state" *ngIf="!isLoading && !errorMessage && questions.length === 0">
+    <p class="empty-icon">🤔</p>
+    <p *ngIf="!isSearching">No questions yet. Be the first to ask one!</p>
+    <p *ngIf="isSearching">No questions matched your search.</p>
+    <a routerLink="/ask" class="btn btn-primary" *ngIf="isLoggedIn">Ask a Question</a>
+  </div>
+
+  <div class="question-list" *ngIf="!isLoading && questions.length > 0">
+    <div class="question-card card" *ngFor="let q of questions" (click)="goToQuestion(q.questionId)">
+      <span class="topic-tag">{{ q.topic }}</span>
+      <h3 class="question-title">{{ q.title }}</h3>
+      <p class="question-preview">
+        {{ q.questionText | slice:0:150 }}{{ q.questionText.length > 150 ? '...' : '' }}
+      </p>
+      <img *ngIf="q.imageUrl" [src]="q.imageUrl" alt="Question image"
+        class="question-image" (error)="onImageError($event)" />
+      <div class="question-meta">
+        <span class="meta-user">👤 {{ q.username }}</span>
+        <span class="meta-date">{{ q.createdAt | date:'MMM d, y' }}</span>
+        <span class="meta-answers">💬 {{ q.answerCount }} answers</span>
+      </div>
+    </div>
+  </div>
+</div>

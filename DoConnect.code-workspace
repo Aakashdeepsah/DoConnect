@@ -1,0 +1,6 @@
+{
+  "folders": [
+    { "name": "DoConnect Frontend (Angular)", "path": "Frontend/doconnect-frontend" }
+  ],
+  "settings": { "editor.formatOnSave": true, "editor.tabSize": 2 }
+}

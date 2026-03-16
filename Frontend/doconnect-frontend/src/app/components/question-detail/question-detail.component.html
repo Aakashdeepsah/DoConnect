@@ -1,0 +1,128 @@
+<div class="page-wrapper">
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading question...</p>
+  </div>
+
+  <div class="alert alert-error" *ngIf="errorMessage && !isLoading">
+    {{ errorMessage }}
+  </div>
+
+  <ng-container *ngIf="question as q">
+    <div class="question-section card" *ngIf="!isLoading">
+      <div class="question-top">
+        <span class="topic-tag">{{ q.topic }}</span>
+        <span class="badge badge-{{ q.status.toLowerCase() }}">{{ q.status }}</span>
+      </div>
+
+      <h2 class="question-title">{{ q.title }}</h2>
+      <p class="question-body">{{ q.questionText }}</p>
+
+      <img
+        *ngIf="q.imageUrl"
+        [src]="q.imageUrl"
+        alt="Question image"
+        class="question-image"
+        (error)="onImageError($event)"
+      />
+
+      <div class="question-meta">
+        <span>👤 {{ q.username }}</span>
+        <span>🕐 {{ q.createdAt | date:'MMMM d, y, h:mm a' }}</span>
+      </div>
+    </div>
+
+    <div class="answers-section" *ngIf="!isLoading">
+      <h3 class="section-title">
+        💬 {{ answers.length }} {{ answers.length === 1 ? 'Answer' : 'Answers' }}
+      </h3>
+
+      <p class="no-answers" *ngIf="answers.length === 0 && !answersLoading">
+        No approved answers yet. Be the first!
+      </p>
+
+      <div class="spinner" *ngIf="answersLoading"></div>
+
+      <div class="answer-card card" *ngFor="let a of answers">
+        <p class="answer-text">{{ a.answerText }}</p>
+
+        <img
+          *ngIf="a.imageUrl"
+          [src]="a.imageUrl"
+          alt="Answer image"
+          class="answer-image"
+          (error)="onImageError($event)"
+        />
+
+        <div class="answer-meta">
+          <span>👤 {{ a.username }}</span>
+          <span>🕐 {{ a.createdAt | date:'MMM d, y' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="answer-form-section card" *ngIf="isLoggedIn && !isLoading">
+      <h3>Your Answer</h3>
+
+      <div class="alert alert-error" *ngIf="answerError">{{ answerError }}</div>
+      <div class="alert alert-success" *ngIf="answerSuccess">{{ answerSuccess }}</div>
+
+      <form (ngSubmit)="submitAnswer()" #answerForm="ngForm" novalidate>
+        <div class="form-group">
+          <textarea
+            name="answerText"
+            [(ngModel)]="answerText"
+            placeholder="Write a helpful, detailed answer..."
+            required
+            minlength="10"
+            rows="5"
+            #answerField="ngModel"
+          ></textarea>
+
+          <span class="field-error" *ngIf="answerField.invalid && answerField.touched">
+            Please write at least 10 characters.
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label>Attach Image (optional)</label>
+
+          <div class="file-upload-area" (click)="answerFileInput.click()">
+            <input
+              #answerFileInput
+              type="file"
+              accept=".jpg,.jpeg,.png,.gif,.webp"
+              (change)="onAnswerFileSelected($event)"
+              style="display: none"
+            />
+
+            <span *ngIf="!answerFile" class="upload-hint">📎 Click to attach</span>
+
+            <span *ngIf="answerFile" class="upload-selected">
+              ✅ {{ answerFile.name }}
+              <button type="button" class="remove-file" (click)="removeAnswerFile($event)">✕</button>
+            </span>
+          </div>
+
+          <img *ngIf="answerImagePreview" [src]="answerImagePreview" class="image-preview" />
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="answerSubmitting || answerForm.invalid"
+        >
+          <span class="spinner" *ngIf="answerSubmitting"></span>
+          {{ answerSubmitting ? 'Submitting...' : 'Post Answer' }}
+        </button>
+      </form>
+    </div>
+
+    <div class="login-prompt" *ngIf="!isLoggedIn && !isLoading">
+      <p>
+        <a routerLink="/login">Log in</a> or
+        <a routerLink="/register">register</a> to post an answer.
+      </p>
+    </div>
+  </ng-container>
+</div>

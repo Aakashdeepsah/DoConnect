@@ -1,0 +1,67 @@
+<div class="page-wrapper">
+  <div class="page-header">
+    <h2>Ask a Question</h2>
+    <p class="subtitle">Your question will be reviewed by an admin before it appears publicly.</p>
+  </div>
+  <div class="alert alert-error"   *ngIf="errorMessage">{{ errorMessage }}</div>
+  <div class="alert alert-success" *ngIf="successMessage">{{ successMessage }}</div>
+  <div class="card form-card">
+    <form (ngSubmit)="onSubmit()" #questionForm="ngForm" novalidate>
+      <div class="form-group">
+        <label for="topic">Topic / Tag</label>
+        <select id="topic" name="topic" [(ngModel)]="topic" required>
+          <option value="">-- Select a topic --</option>
+          <option value="Angular">Angular</option>
+          <option value=".NET">.NET / C#</option>
+          <option value="SQL">SQL / Database</option>
+          <option value="JavaScript">JavaScript</option>
+          <option value="TypeScript">TypeScript</option>
+          <option value="HTML/CSS">HTML / CSS</option>
+          <option value="Git">Git</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="title">Question Title</label>
+        <input id="title" type="text" name="title" [(ngModel)]="title"
+          placeholder="e.g. How do I use Angular services?"
+          required minlength="10" maxlength="300" #titleField="ngModel"/>
+        <div class="field-meta">
+          <span class="field-error" *ngIf="titleField.invalid && titleField.touched">
+            Title must be at least 10 characters.
+          </span>
+          <span class="char-count">{{ title.length }}/300</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="body">Question Details</label>
+        <textarea id="body" name="body" [(ngModel)]="questionText"
+          placeholder="Describe your problem in detail..."
+          required minlength="20" rows="6" #bodyField="ngModel"></textarea>
+        <span class="field-error" *ngIf="bodyField.invalid && bodyField.touched">
+          Please provide more detail (at least 20 characters).
+        </span>
+      </div>
+      <div class="form-group">
+        <label>Attach Image (optional)</label>
+        <div class="file-upload-area" (click)="fileInput.click()">
+          <input #fileInput type="file" accept=".jpg,.jpeg,.png,.gif,.webp"
+            (change)="onFileSelected($event)" style="display:none"/>
+          <span *ngIf="!selectedFile" class="upload-hint">📎 Click to attach an image (max 5MB)</span>
+          <span *ngIf="selectedFile"  class="upload-selected">
+            ✅ {{ selectedFile.name }}
+            <button type="button" class="remove-file" (click)="removeFile($event)">✕</button>
+          </span>
+        </div>
+        <img *ngIf="imagePreview" [src]="imagePreview" class="image-preview" alt="Preview"/>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline" routerLink="/home">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading || questionForm.invalid">
+          <span class="spinner" *ngIf="isLoading"></span>
+          {{ isLoading ? 'Submitting...' : 'Submit Question' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

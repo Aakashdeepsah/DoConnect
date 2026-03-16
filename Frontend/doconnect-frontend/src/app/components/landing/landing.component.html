@@ -1,0 +1,196 @@
+<!-- ===========================
+     HERO SECTION
+     =========================== -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+  <div class="container hero-content">
+    <div class="hero-badge">⚡ Technical Q&amp;A Platform</div>
+    <h1 class="hero-title">
+      Ask. Answer.<br/>
+      <span class="gradient-text">Grow Together.</span>
+    </h1>
+    <p class="hero-subtitle">
+      DoConnect is a moderated technical Q&amp;A platform for developers.
+      Ask questions, share knowledge, and build your skills — all in one place.
+    </p>
+    <div class="hero-actions">
+      <a routerLink="/register" class="btn btn-primary btn-lg">Get Started Free</a>
+      <a routerLink="/home"     class="btn btn-secondary btn-lg">Browse Questions</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-icon">💬</span><span>Ask &amp; Answer</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><span class="stat-icon">🛡</span><span>Moderated Content</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><span class="stat-icon">🔍</span><span>Full-text Search</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================
+     FEATURES SECTION
+     =========================== -->
+<section class="features">
+  <div class="container">
+    <div class="section-label">Platform Features</div>
+    <h2 class="section-title">Everything you need to learn and grow</h2>
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Topic-Based Questions</h3>
+        <p>Organize questions by topics like Angular, .NET, SQL, JavaScript and more for easy discovery.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">✅</div>
+        <h3>Quality Moderation</h3>
+        <p>All questions and answers are reviewed by admins before going live, ensuring quality content.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🖼</div>
+        <h3>Image Attachments</h3>
+        <p>Attach screenshots, diagrams, or code images to your questions and answers for better context.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Powerful Search</h3>
+        <p>Find answers instantly with full-text search across titles, topics, and question content.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">💬</div>
+        <h3>Multiple Answers</h3>
+        <p>Each question can receive multiple answers, giving you different perspectives and solutions.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔐</div>
+        <h3>JWT Authentication</h3>
+        <p>Secure login with JSON Web Tokens. Your session is safely stored and auto-expires.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===========================
+     ROLE SECTIONS
+     =========================== -->
+<section class="roles">
+  <div class="container">
+    <div class="section-label">Who is this for?</div>
+    <h2 class="section-title">Two types of accounts, one platform</h2>
+
+    <div class="roles-grid">
+
+      <!-- USER CARD -->
+      <div class="role-card role-user">
+        <div class="role-header">
+          <div class="role-icon user-icon">👤</div>
+          <div>
+            <h3>Regular User</h3>
+            <p class="role-tag">Register via the signup page</p>
+          </div>
+        </div>
+        <ul class="role-features">
+          <li>
+            <span class="check">✓</span>
+            Ask questions under any technical topic
+          </li>
+          <li>
+            <span class="check">✓</span>
+            Answer questions posted by others
+          </li>
+          <li>
+            <span class="check">✓</span>
+            Attach images to questions and answers
+          </li>
+          <li>
+            <span class="check">✓</span>
+            Search and browse all approved content
+          </li>
+          <li>
+            <span class="check">✓</span>
+            View your own question history
+          </li>
+        </ul>
+        <a routerLink="/register" class="btn btn-primary" style="width:100%; justify-content:center;">
+          Create User Account
+        </a>
+      </div>
+
+      <!-- ADMIN CARD -->
+      <div class="role-card role-admin">
+        <div class="role-header">
+          <div class="role-icon admin-icon">🛡</div>
+          <div>
+            <h3>Administrator</h3>
+            <p class="role-tag">Account created by system only</p>
+          </div>
+        </div>
+        <ul class="role-features">
+          <li>
+            <span class="check admin-check">✓</span>
+            Approve or reject pending questions
+          </li>
+          <li>
+            <span class="check admin-check">✓</span>
+            Approve or reject pending answers
+          </li>
+          <li>
+            <span class="check admin-check">✓</span>
+            Delete inappropriate content
+          </li>
+          <li>
+            <span class="check admin-check">✓</span>
+            View all content regardless of status
+          </li>
+          <li>
+            <span class="check admin-check">✓</span>
+            Receive notifications for pending items
+          </li>
+        </ul>
+        <div class="admin-note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
+          </svg>
+          Admin accounts are created directly in the database by the system administrator.
+          They cannot be registered through this form.
+        </div>
+        <a routerLink="/login" class="btn btn-secondary" style="width:100%; justify-content:center;">
+          Admin Login
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===========================
+     CTA SECTION
+     =========================== -->
+<section class="cta">
+  <div class="container">
+    <div class="cta-card">
+      <h2>Ready to start learning?</h2>
+      <p>Join DoConnect and ask your first technical question today.</p>
+      <div class="cta-actions">
+        <a routerLink="/register" class="btn btn-primary btn-lg">Create Account</a>
+        <a routerLink="/home"     class="btn btn-secondary btn-lg">Browse First</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <span>⚡ DoConnect — Built with ASP.NET Core MVC &amp; Angular</span>
+  </div>
+</footer>
