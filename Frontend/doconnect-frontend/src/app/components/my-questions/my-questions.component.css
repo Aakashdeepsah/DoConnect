@@ -1,0 +1,20 @@
+/* my-questions.component.css */
+.page-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px; }
+.page-header h2 { font-size:1.6rem; }
+.subtitle { color:var(--text-secondary); font-size:0.9rem; margin-top:4px; }
+.question-list { display:flex; flex-direction:column; gap:14px; }
+.question-card { transition:border-color 0.2s; }
+.card-top { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.topic-tag { display:inline-block; background:var(--accent-light); color:var(--accent); font-size:0.72rem; font-weight:700; padding:3px 10px; border-radius:20px; text-transform:uppercase; }
+.question-title { font-size:1.05rem; margin-bottom:8px; line-height:1.4; }
+.question-title.clickable { cursor:pointer; color:var(--accent); }
+.question-title.clickable:hover { text-decoration:underline; }
+.question-preview { color:var(--text-secondary); font-size:0.88rem; line-height:1.5; margin-bottom:10px; }
+.status-note { font-size:0.82rem; padding:8px 12px; border-radius:var(--radius-sm); margin-bottom:10px; }
+.status-note.pending  { background:var(--warning-light); color:var(--warning); }
+.status-note.approved { background:var(--success-light); color:var(--success); }
+.status-note.rejected { background:var(--danger-light);  color:var(--danger);  }
+.card-meta { font-size:0.78rem; color:var(--text-muted); margin-top:8px; }
+.loading-state { display:flex; flex-direction:column; align-items:center; gap:12px; padding:60px 0; color:var(--text-secondary); }
+.empty-state { text-align:center; padding:60px 0; color:var(--text-secondary); display:flex; flex-direction:column; align-items:center; gap:12px; }
+.empty-icon { font-size:3rem; }

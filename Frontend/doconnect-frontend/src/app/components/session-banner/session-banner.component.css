@@ -1,0 +1,25 @@
+/* session-banner.component.css */
+.session-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(245,158,11,0.15);
+  border-bottom: 1px solid var(--warning);
+  color: #fcd34d;
+  padding: 10px 24px;
+  font-size: 0.88rem;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.banner-actions { display:flex; gap:10px; }
+.btn-renew {
+  background: var(--warning); color: #0a0a0f;
+  border: none; padding: 5px 14px; border-radius: var(--radius-sm);
+  font-size: 0.82rem; font-weight: 600; cursor: pointer;
+}
+.btn-renew:hover { background: #d97706; }
+.btn-dismiss {
+  background: transparent; color: #fcd34d;
+  border: 1px solid rgba(245,158,11,0.4); padding: 5px 14px;
+  border-radius: var(--radius-sm); font-size: 0.82rem; cursor: pointer;
+}

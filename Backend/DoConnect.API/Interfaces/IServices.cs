@@ -1,4 +1,4 @@
-// Interfaces/IServices.cs
+// Interfaces/IServices.cs — Sprint 2: added GetAllUsersAsync
 using DoConnect.API.DTOs;
 namespace DoConnect.API.Interfaces
 {
@@ -26,5 +26,7 @@ namespace DoConnect.API.Interfaces
         Task<bool> DeleteQuestionAsync(int questionId);
         Task<bool> DeleteAnswerAsync(int answerId);
         Task<int> GetPendingCountAsync();
+        // Sprint 2: admin user list
+        Task<List<UserSummaryDto>> GetAllUsersAsync();
     }
 }

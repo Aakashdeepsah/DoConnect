@@ -1,6 +1,8 @@
-// Services/AdminService.cs
-// FIX: Question deletion now works because the DB schema has ON DELETE CASCADE.
-//      EF Core removes the question; SQL Server auto-removes its answers.
+// Services/AdminService.cs — Sprint 2 updates
+// Changes:
+//   1. UpdatedAt is set whenever status is changed
+//   2. GetAllUsersAsync — admin can view registered users
+//   3. GetQuestionsByStatusAsync — filter by specific status
 using DoConnect.API.Data;
 using DoConnect.API.DTOs;
 using DoConnect.API.Helpers;
@@ -39,6 +41,7 @@ namespace DoConnect.API.Services
                 Status       = q.Status,
                 ImageUrl     = ImageHelper.BuildImageUrl(q.ImagePath, ""),
                 CreatedAt    = q.CreatedAt,
+                UpdatedAt    = q.UpdatedAt,
                 AnswerCount  = q.Answers?.Count ?? 0
             }).ToList();
         }
@@ -60,15 +63,18 @@ namespace DoConnect.API.Services
                 AnswerText = a.AnswerText,
                 Status     = a.Status,
                 ImageUrl   = ImageHelper.BuildImageUrl(a.ImagePath, ""),
-                CreatedAt  = a.CreatedAt
+                CreatedAt  = a.CreatedAt,
+                UpdatedAt  = a.UpdatedAt
             }).ToList();
         }
 
+        // Sprint 2: set UpdatedAt timestamp when admin changes status
         public async Task<bool> UpdateQuestionStatusAsync(int questionId, string status)
         {
             var question = await _context.Questions.FindAsync(questionId);
             if (question == null) return false;
-            question.Status = status;
+            question.Status    = status;
+            question.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
             return true;
         }
@@ -77,28 +83,19 @@ namespace DoConnect.API.Services
         {
             var answer = await _context.Answers.FindAsync(answerId);
             if (answer == null) return false;
-            answer.Status = status;
+            answer.Status    = status;
+            answer.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
             return true;
         }
 
-        // FIX: Deletion now works because ON DELETE CASCADE in the schema
-        // automatically removes all answers when the question is deleted.
         public async Task<bool> DeleteQuestionAsync(int questionId)
         {
             var question = await _context.Questions.FindAsync(questionId);
             if (question == null) return false;
-
-            // Delete image files for the question
             _imageHelper.DeleteImage(question.ImagePath);
-
-            // Also clean up answer images before cascade removes the records
-            var answers = await _context.Answers
-                .Where(a => a.QuestionId == questionId)
-                .ToListAsync();
-            foreach (var answer in answers)
-                _imageHelper.DeleteImage(answer.ImagePath);
-
+            var answers = await _context.Answers.Where(a => a.QuestionId == questionId).ToListAsync();
+            foreach (var answer in answers) _imageHelper.DeleteImage(answer.ImagePath);
             _context.Questions.Remove(question);
             await _context.SaveChangesAsync();
             return true;
@@ -119,6 +116,25 @@ namespace DoConnect.API.Services
             var pq = await _context.Questions.CountAsync(q => q.Status == "Pending");
             var pa = await _context.Answers.CountAsync(a => a.Status == "Pending");
             return pq + pa;
+        }
+
+        // Sprint 2: Admin can view all registered users
+        public async Task<List<UserSummaryDto>> GetAllUsersAsync()
+        {
+            var users = await _context.Users
+                .OrderByDescending(u => u.CreatedAt)
+                .ToListAsync();
+
+            return users.Select(u => new UserSummaryDto
+            {
+                UserId    = u.UserId,
+                Username  = u.Username,
+                Email     = u.Email,
+                Role      = u.Role,
+                CreatedAt = u.CreatedAt,
+                QuestionCount = _context.Questions.Count(q => q.UserId == u.UserId),
+                AnswerCount   = _context.Answers.Count(a => a.UserId == u.UserId)
+            }).ToList();
         }
     }
 }

@@ -1,4 +1,4 @@
-// Controllers/AdminController.cs
+// Controllers/AdminController.cs — Sprint 2: added GET /api/admin/users
 using DoConnect.API.DTOs;
 using DoConnect.API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -14,11 +14,12 @@ namespace DoConnect.API.Controllers
         private readonly IAdminService _adminService;
         public AdminController(IAdminService s) { _adminService = s; }
 
+        // ── Questions ──
         [HttpGet("questions")]
         public async Task<IActionResult> GetAllQuestions()
         {
             var questions = await _adminService.GetAllQuestionsAsync();
-            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var baseUrl   = $"{Request.Scheme}://{Request.Host}";
             foreach (var q in questions)
                 if (!string.IsNullOrEmpty(q.ImageUrl) && !q.ImageUrl.StartsWith("http"))
                     q.ImageUrl = $"{baseUrl}/uploads/{q.ImageUrl}";
@@ -42,6 +43,7 @@ namespace DoConnect.API.Controllers
             return Ok(new { message = "Question deleted." });
         }
 
+        // ── Answers ──
         [HttpGet("answers")]
         public async Task<IActionResult> GetAllAnswers()
         {
@@ -70,8 +72,14 @@ namespace DoConnect.API.Controllers
             return Ok(new { message = "Answer deleted." });
         }
 
+        // ── Pending count ──
         [HttpGet("pending-count")]
         public async Task<IActionResult> PendingCount() =>
             Ok(new { pendingCount = await _adminService.GetPendingCountAsync() });
+
+        // ── Sprint 2: User list ──
+        [HttpGet("users")]
+        public async Task<IActionResult> GetAllUsers() =>
+            Ok(await _adminService.GetAllUsersAsync());
     }
 }

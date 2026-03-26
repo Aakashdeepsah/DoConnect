@@ -1,6 +1,6 @@
+<!-- register.component.html — Sprint 2: confirm password + better validation -->
 <div class="auth-wrapper">
   <div class="auth-card card">
-
     <div class="auth-header">
       <a routerLink="/" class="back-link">← Back</a>
       <div class="auth-logo">⚡</div>
@@ -11,50 +11,75 @@
     <div class="alert alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
 
     <form (ngSubmit)="onRegister()" #f="ngForm" novalidate>
+
       <div class="form-group">
         <label>Username</label>
         <input type="text" name="username" [(ngModel)]="username"
-          placeholder="e.g. john_doe" required minlength="3" #uf="ngModel"/>
+          placeholder="e.g. john_doe" required minlength="3" maxlength="100" #uf="ngModel"
+          [class.input-error]="uf.invalid && uf.touched"/>
         <span class="field-error" *ngIf="uf.invalid && uf.touched">
-          At least 3 characters required.
+          <span *ngIf="uf.errors?.['required']">Username is required.</span>
+          <span *ngIf="uf.errors?.['minlength']">At least 3 characters required.</span>
         </span>
       </div>
+
       <div class="form-group">
         <label>Email Address</label>
         <input type="email" name="email" [(ngModel)]="email"
-          placeholder="you@example.com" required #ef="ngModel"/>
+          placeholder="you@example.com" required #ef="ngModel"
+          [class.input-error]="ef.invalid && ef.touched"/>
         <span class="field-error" *ngIf="ef.invalid && ef.touched">
-          Please enter a valid email.
+          Please enter a valid email address.
         </span>
       </div>
+
       <div class="form-group">
         <label>Password</label>
-        <input type="password" name="password" [(ngModel)]="password"
-          placeholder="Min. 6 characters" required minlength="6" #pf="ngModel"/>
+        <div class="password-wrap">
+          <input [type]="showPassword ? 'text' : 'password'"
+            name="password" [(ngModel)]="password"
+            placeholder="Min. 6 characters" required minlength="6" #pf="ngModel"
+            [class.input-error]="pf.invalid && pf.touched"/>
+          <button type="button" class="toggle-pw" (click)="showPassword = !showPassword">
+            {{ showPassword ? '🙈' : '👁' }}
+          </button>
+        </div>
+        <div class="password-strength" *ngIf="password.length > 0">
+          <div class="strength-bar">
+            <div class="strength-fill" [style.width]="passwordStrengthPercent + '%'"
+              [class]="'strength-' + passwordStrengthLabel.toLowerCase()"></div>
+          </div>
+          <span class="strength-text">{{ passwordStrengthLabel }}</span>
+        </div>
         <span class="field-error" *ngIf="pf.invalid && pf.touched">
           Password must be at least 6 characters.
         </span>
       </div>
 
-      <!-- FIX: No role selector. All registrations create a "User" account.
-           Admin accounts are created only via database seed by the system admin. -->
+      <!-- Sprint 2: Confirm Password -->
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input [type]="showPassword ? 'text' : 'password'"
+          name="confirmPassword" [(ngModel)]="confirmPassword"
+          placeholder="Re-enter your password" required #cpf="ngModel"
+          [class.input-error]="confirmPassword && password !== confirmPassword"/>
+        <span class="field-error" *ngIf="confirmPassword && password !== confirmPassword">
+          Passwords do not match.
+        </span>
+      </div>
+
       <div class="account-type-note">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
-        </svg>
-        All registered accounts are <strong>User</strong> accounts.
+        ℹ️ All registered accounts are <strong>User</strong> accounts.
         Admin access is granted by the system administrator only.
       </div>
 
       <button type="submit" class="btn btn-primary full-width"
-        [disabled]="isLoading || f.invalid">
+        [disabled]="isLoading || f.invalid || password !== confirmPassword">
         <span class="spinner" *ngIf="isLoading"></span>
         {{ isLoading ? 'Creating account...' : 'Create Account' }}
       </button>
-    </form>
 
-    <p class="auth-footer">
-      Already have an account? <a routerLink="/login">Sign in</a>
-    </p>
+    </form>
+    <p class="auth-footer">Already have an account? <a routerLink="/login">Sign in</a></p>
   </div>
 </div>

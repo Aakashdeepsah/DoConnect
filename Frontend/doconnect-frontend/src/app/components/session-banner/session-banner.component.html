@@ -1,0 +1,8 @@
+<!-- session-banner.component.html -->
+<div class="session-banner" *ngIf="showBanner">
+  <span>⚠️ Your session expires in <strong>{{ minutesLeft }} minute{{ minutesLeft === 1 ? '' : 's' }}</strong>.</span>
+  <div class="banner-actions">
+    <button class="btn-renew" (click)="renewSession()">Stay logged in</button>
+    <button class="btn-dismiss" (click)="dismiss()">Dismiss</button>
+  </div>
+</div>

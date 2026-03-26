@@ -1,4 +1,4 @@
-// Models/Answer.cs
+// Models/Answer.cs — Sprint 2: added UpdatedAt
 namespace DoConnect.API.Models
 {
     public class Answer
@@ -10,6 +10,10 @@ namespace DoConnect.API.Models
         public string Status { get; set; } = "Pending";
         public string? ImagePath { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        // Sprint 2: tracks when admin last updated the status
+        public DateTime? UpdatedAt { get; set; }
+
         public Question? Question { get; set; }
         public User? User { get; set; }
     }

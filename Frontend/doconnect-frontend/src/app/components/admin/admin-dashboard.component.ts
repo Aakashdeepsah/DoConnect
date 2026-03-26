@@ -1,6 +1,8 @@
+// components/admin/admin-dashboard.component.ts — Sprint 2
+// Changes: added Users tab, loadUsers(), users array
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from '../../services/admin.service';
-import { Question, Answer } from '../../models/models';
+import { Question, Answer, UserSummary } from '../../models/models';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -9,32 +11,31 @@ import { Question, Answer } from '../../models/models';
 })
 export class AdminDashboardComponent implements OnInit {
 
-  activeTab: 'questions' | 'answers' = 'questions';
-  questions: Question[] = [];
-  answers: Answer[]     = [];
-  questionFilter        = 'All';
-  answerFilter          = 'All';
-  isLoading             = false;
-  successMessage        = '';
-  errorMessage          = '';
-  pendingCount          = 0;
+  activeTab: 'questions' | 'answers' | 'users' = 'questions';
+
+  questions: Question[]    = [];
+  answers: Answer[]        = [];
+  users: UserSummary[]     = []; // Sprint 2
+
+  qFilter      = 'All';
+  aFilter      = 'All';
+  isLoading    = false;
+  successMsg   = '';
+  errorMsg     = '';
+  pendingCount = 0;
 
   constructor(private adminService: AdminService) {}
 
   ngOnInit(): void { this.loadQuestions(); this.loadPendingCount(); }
 
-  get filteredQuestions(): Question[] {
-    return this.questionFilter === 'All' ? this.questions : this.questions.filter(q => q.status === this.questionFilter);
-  }
-  get filteredAnswers(): Answer[] {
-    return this.answerFilter === 'All' ? this.answers : this.answers.filter(a => a.status === this.answerFilter);
-  }
+  get filteredQ(): Question[] { return this.qFilter === 'All' ? this.questions : this.questions.filter(q => q.status === this.qFilter); }
+  get filteredA(): Answer[]   { return this.aFilter === 'All' ? this.answers   : this.answers.filter(a => a.status === this.aFilter); }
 
   loadQuestions(): void {
-    this.isLoading = true; this.errorMessage = '';
+    this.isLoading = true;
     this.adminService.getAllQuestions().subscribe({
-      next: (data) => { this.questions = data; this.isLoading = false; },
-      error: ()    => { this.isLoading = false; this.errorMessage = 'Failed to load questions.'; }
+      next: (d) => { this.questions = d; this.isLoading = false; },
+      error: ()  => { this.isLoading = false; this.showError('Failed to load questions.'); }
     });
   }
 
@@ -42,8 +43,18 @@ export class AdminDashboardComponent implements OnInit {
     if (this.answers.length > 0) return;
     this.isLoading = true;
     this.adminService.getAllAnswers().subscribe({
-      next: (data) => { this.answers = data; this.isLoading = false; },
-      error: ()    => { this.isLoading = false; this.errorMessage = 'Failed to load answers.'; }
+      next: (d) => { this.answers = d; this.isLoading = false; },
+      error: ()  => { this.isLoading = false; this.showError('Failed to load answers.'); }
+    });
+  }
+
+  // Sprint 2: load user list
+  loadUsers(): void {
+    if (this.users.length > 0) return;
+    this.isLoading = true;
+    this.adminService.getAllUsers().subscribe({
+      next: (d) => { this.users = d; this.isLoading = false; },
+      error: ()  => { this.isLoading = false; this.showError('Failed to load users.'); }
     });
   }
 
@@ -54,58 +65,28 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-  approveQuestion(id: number): void {
-    this.adminService.updateQuestionStatus(id, 'Approved').subscribe({
-      next: () => { this.setQStatus(id, 'Approved'); this.showSuccess('Question approved!'); },
-      error: () => this.showError('Failed to approve.')
-    });
-  }
-  rejectQuestion(id: number): void {
-    this.adminService.updateQuestionStatus(id, 'Rejected').subscribe({
-      next: () => { this.setQStatus(id, 'Rejected'); this.showSuccess('Question rejected.'); },
-      error: () => this.showError('Failed to reject.')
-    });
-  }
-  deleteQuestion(id: number): void {
+  approveQ(id: number): void { this.adminService.updateQuestionStatus(id,'Approved').subscribe({ next:()=>{ this.setQ(id,'Approved'); this.showSuccess('Approved!'); }, error:()=>this.showError('Failed.') }); }
+  rejectQ(id: number): void  { this.adminService.updateQuestionStatus(id,'Rejected').subscribe({ next:()=>{ this.setQ(id,'Rejected'); this.showSuccess('Rejected.'); }, error:()=>this.showError('Failed.') }); }
+  deleteQ(id: number): void  {
     if (!confirm('Delete this question?')) return;
-    this.adminService.deleteQuestion(id).subscribe({
-      next: () => { this.questions = this.questions.filter(q => q.questionId !== id); this.showSuccess('Deleted.'); this.loadPendingCount(); },
-      error: () => this.showError('Failed to delete.')
-    });
+    this.adminService.deleteQuestion(id).subscribe({ next:()=>{ this.questions=this.questions.filter(q=>q.questionId!==id); this.showSuccess('Deleted.'); this.loadPendingCount(); }, error:()=>this.showError('Failed.') });
   }
-  approveAnswer(id: number): void {
-    this.adminService.updateAnswerStatus(id, 'Approved').subscribe({
-      next: () => { this.setAStatus(id, 'Approved'); this.showSuccess('Answer approved!'); },
-      error: () => this.showError('Failed to approve.')
-    });
-  }
-  rejectAnswer(id: number): void {
-    this.adminService.updateAnswerStatus(id, 'Rejected').subscribe({
-      next: () => { this.setAStatus(id, 'Rejected'); this.showSuccess('Answer rejected.'); },
-      error: () => this.showError('Failed to reject.')
-    });
-  }
-  deleteAnswer(id: number): void {
+  approveA(id: number): void { this.adminService.updateAnswerStatus(id,'Approved').subscribe({ next:()=>{ this.setA(id,'Approved'); this.showSuccess('Approved!'); }, error:()=>this.showError('Failed.') }); }
+  rejectA(id: number): void  { this.adminService.updateAnswerStatus(id,'Rejected').subscribe({ next:()=>{ this.setA(id,'Rejected'); this.showSuccess('Rejected.'); }, error:()=>this.showError('Failed.') }); }
+  deleteA(id: number): void  {
     if (!confirm('Delete this answer?')) return;
-    this.adminService.deleteAnswer(id).subscribe({
-      next: () => { this.answers = this.answers.filter(a => a.answerId !== id); this.showSuccess('Deleted.'); this.loadPendingCount(); },
-      error: () => this.showError('Failed to delete.')
-    });
+    this.adminService.deleteAnswer(id).subscribe({ next:()=>{ this.answers=this.answers.filter(a=>a.answerId!==id); this.showSuccess('Deleted.'); this.loadPendingCount(); }, error:()=>this.showError('Failed.') });
   }
 
-  private setQStatus(id: number, status: string): void {
-    const q = this.questions.find(q => q.questionId === id); if (q) q.status = status; this.loadPendingCount();
-  }
-  private setAStatus(id: number, status: string): void {
-    const a = this.answers.find(a => a.answerId === id); if (a) a.status = status; this.loadPendingCount();
-  }
+  private setQ(id: number, s: string): void { const q=this.questions.find(x=>x.questionId===id); if(q) q.status=s; this.loadPendingCount(); }
+  private setA(id: number, s: string): void { const a=this.answers.find(x=>x.answerId===id);   if(a) a.status=s; this.loadPendingCount(); }
 
-  showSuccess(msg: string): void { this.successMessage = msg; this.errorMessage = ''; setTimeout(() => this.successMessage = '', 3000); }
-  showError(msg: string): void   { this.errorMessage = msg; this.successMessage = ''; setTimeout(() => this.errorMessage = '', 4000); }
+  showSuccess(m: string): void { this.successMsg=m; this.errorMsg='';   setTimeout(()=>this.successMsg='',3000); }
+  showError(m: string): void   { this.errorMsg=m;   this.successMsg=''; setTimeout(()=>this.errorMsg='',4000); }
 
-  onImageError(event: Event): void {
-    const img = event.target as HTMLImageElement; img.style.display = 'none';
-    const c = img.closest('.image-container') as HTMLElement; if (c) c.style.display = 'none';
+  onImageError(e: Event): void {
+    const img = e.target as HTMLImageElement; img.style.display='none';
+    const c = img.closest('.image-container') as HTMLElement; if(c) c.style.display='none';
   }
-  onImageLoad(event: Event): void { (event.target as HTMLImageElement).style.display = 'block'; }
+  onImageLoad(e: Event): void { (e.target as HTMLImageElement).style.display='block'; }
 }

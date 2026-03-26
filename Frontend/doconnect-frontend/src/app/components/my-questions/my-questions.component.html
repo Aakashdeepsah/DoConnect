@@ -1,0 +1,57 @@
+<!-- my-questions.component.html — Sprint 2: User can track their posts -->
+<div class="page-wrapper">
+  <div class="page-header">
+    <div>
+      <h2>My Questions</h2>
+      <p class="subtitle">Track the status of your submitted questions</p>
+    </div>
+    <a routerLink="/ask" class="btn btn-primary">+ Ask Another</a>
+  </div>
+
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner"></div><p>Loading your questions...</p>
+  </div>
+
+  <div class="alert alert-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <div class="empty-state" *ngIf="!isLoading && questions.length === 0">
+    <span class="empty-icon">📭</span>
+    <p>You haven't asked any questions yet.</p>
+    <a routerLink="/ask" class="btn btn-primary">Ask your first question</a>
+  </div>
+
+  <div class="question-list" *ngIf="!isLoading && questions.length > 0">
+    <div class="question-card card" *ngFor="let q of questions">
+
+      <div class="card-top">
+        <span class="topic-tag">{{ q.topic }}</span>
+        <span class="badge badge-{{ q.status.toLowerCase() }}">{{ q.status }}</span>
+      </div>
+
+      <h3 class="question-title" (click)="goTo(q.questionId)" [class.clickable]="q.status === 'Approved'">
+        {{ q.title }}
+      </h3>
+
+      <p class="question-preview">
+        {{ q.questionText | slice:0:120 }}{{ q.questionText.length > 120 ? '...' : '' }}
+      </p>
+
+      <!-- Status-specific messages -->
+      <div class="status-note pending"  *ngIf="q.status === 'Pending'">
+        ⏳ Awaiting admin review
+      </div>
+      <div class="status-note approved" *ngIf="q.status === 'Approved'">
+        ✅ Published — {{ q.answerCount }} answer{{ q.answerCount === 1 ? '' : 's' }}
+      </div>
+      <div class="status-note rejected" *ngIf="q.status === 'Rejected'">
+        ❌ Not approved — does not meet content guidelines
+      </div>
+
+      <div class="card-meta">
+        <span>🕐 Posted {{ q.createdAt | date:'MMM d, y' }}</span>
+        <span *ngIf="q.updatedAt">· Updated {{ q.updatedAt | date:'MMM d, y' }}</span>
+      </div>
+
+    </div>
+  </div>
+</div>

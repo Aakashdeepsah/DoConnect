@@ -1,25 +1,65 @@
+/* admin-dashboard.component.css — Sprint 2: added users table */
 .admin-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px; }
 .admin-header h2 { font-size:1.6rem; }
 .subtitle { color:var(--text-secondary); font-size:0.9rem; margin-top:4px; }
-.pending-badge { background:rgba(251,191,36,0.15); border:1px solid var(--accent-yellow); color:var(--accent-yellow); padding:6px 14px; border-radius:20px; font-size:0.85rem; font-weight:600; }
-.tab-bar { display:flex; gap:4px; margin-bottom:20px; border-bottom:1px solid var(--border-color); padding-bottom:0; }
+.pending-badge { background:rgba(251,191,36,0.15); border:1px solid var(--warning); color:var(--warning); padding:6px 14px; border-radius:20px; font-size:0.85rem; font-weight:600; }
+
+/* Tabs */
+.tab-bar { display:flex; gap:4px; margin-bottom:20px; border-bottom:1px solid var(--border); }
 .tab-btn { background:none; border:none; border-bottom:2px solid transparent; color:var(--text-secondary); padding:10px 18px; font-size:0.95rem; font-family:'Inter',sans-serif; cursor:pointer; display:flex; align-items:center; gap:8px; transition:color 0.2s,border-color 0.2s; margin-bottom:-1px; }
 .tab-btn:hover { color:var(--text-primary); }
-.tab-btn.active { color:var(--accent-blue); border-bottom-color:var(--accent-blue); font-weight:600; }
-.tab-count { background:var(--bg-tertiary); color:var(--text-secondary); font-size:0.75rem; padding:1px 7px; border-radius:10px; }
+.tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:600; }
+.tab-count { background:var(--bg-elevated); color:var(--text-secondary); font-size:0.75rem; padding:1px 7px; border-radius:10px; }
+
+/* Filters */
 .filter-bar { display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap; }
-.filter-btn { background:var(--bg-secondary); border:1px solid var(--border-color); color:var(--text-secondary); padding:6px 14px; border-radius:20px; font-size:0.82rem; font-family:'Inter',sans-serif; cursor:pointer; transition:all 0.2s; }
-.filter-btn:hover, .filter-btn.active { background:var(--accent-blue); border-color:var(--accent-blue); color:#fff; }
+.filter-btn { background:var(--bg-secondary); border:1px solid var(--border); color:var(--text-secondary); padding:6px 14px; border-radius:20px; font-size:0.82rem; font-family:'Inter',sans-serif; cursor:pointer; transition:all 0.2s; }
+.filter-btn:hover, .filter-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+
+/* Admin cards */
 .admin-card { margin-bottom:14px; }
-.admin-card-header { margin-bottom:10px; }
-.admin-card-meta { display:flex; align-items:center; flex-wrap:wrap; gap:10px; }
-.topic-tag { display:inline-block; background:rgba(91,141,238,0.15); color:var(--accent-blue); font-size:0.72rem; font-weight:600; padding:2px 8px; border-radius:20px; text-transform:uppercase; }
-.meta-user,.meta-date,.meta-qid { color:var(--text-muted); font-size:0.8rem; }
+.admin-card-meta { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px; }
+.topic-tag { background:var(--accent-light); color:var(--accent); font-size:0.72rem; font-weight:600; padding:2px 8px; border-radius:20px; text-transform:uppercase; }
+.meta-info { color:var(--text-muted); font-size:0.8rem; }
+.meta-info.updated { color:var(--accent); font-style:italic; }
 .admin-item-title { font-size:1rem; margin-bottom:8px; }
 .admin-item-body { color:var(--text-secondary); font-size:0.9rem; line-height:1.5; margin-bottom:12px; max-height:120px; overflow:hidden; }
-.image-container { margin:12px 0; padding:10px; background:var(--bg-tertiary); border-radius:var(--radius-sm); border:1px solid var(--border-color); }
+.image-container { margin:12px 0; padding:10px; background:var(--bg-elevated); border-radius:var(--radius-sm); border:1px solid var(--border); }
 .image-label { font-size:0.8rem; color:var(--text-muted); margin-bottom:8px; }
 .admin-image { max-width:100%; max-height:250px; border-radius:var(--radius-sm); display:block; object-fit:contain; }
-.admin-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; padding-top:14px; border-top:1px solid var(--border-color); }
+.admin-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; padding-top:14px; border-top:1px solid var(--border); }
 .empty-msg { color:var(--text-muted); text-align:center; padding:40px 0; font-style:italic; }
 .loading-state { display:flex; flex-direction:column; align-items:center; gap:12px; padding:60px 0; color:var(--text-secondary); }
+
+/* ── Users Table — Sprint 2 ── */
+.users-table-wrap { overflow-x:auto; border-radius:var(--radius); border:1px solid var(--border); }
+.users-table {
+  width:100%; border-collapse:collapse; font-size:0.88rem;
+}
+.users-table thead tr {
+  background:var(--bg-elevated);
+  border-bottom:2px solid var(--border);
+}
+.users-table th {
+  padding:12px 16px; text-align:left; font-weight:600;
+  color:var(--text-secondary); font-size:0.78rem;
+  text-transform:uppercase; letter-spacing:0.05em;
+}
+.users-table td {
+  padding:12px 16px; border-bottom:1px solid var(--border);
+  color:var(--text-primary); vertical-align:middle;
+}
+.users-table tbody tr:last-child td { border-bottom:none; }
+.users-table tbody tr:hover { background:var(--bg-hover); }
+.users-table tbody tr.admin-row { background:rgba(99,102,241,0.04); }
+.users-table .num   { color:var(--text-muted); font-size:0.8rem; width:40px; }
+.users-table .email { color:var(--text-secondary); font-size:0.85rem; }
+.users-table .center { text-align:center; }
+
+/* Role badges */
+.role-badge {
+  display:inline-block; padding:3px 10px; border-radius:20px;
+  font-size:0.72rem; font-weight:700; text-transform:uppercase;
+}
+.role-admin { background:var(--accent-light); color:var(--accent); }
+.role-user  { background:var(--success-light); color:var(--success); }

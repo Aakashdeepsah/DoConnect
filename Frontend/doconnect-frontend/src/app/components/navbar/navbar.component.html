@@ -7,15 +7,10 @@
       <span class="brand-text">DoConnect</span>
     </a>
 
-    <!-- Search (center) -->
+    <!-- Search -->
     <div class="nav-search">
-      <input
-        type="text"
-        placeholder="Search questions..."
-        [(ngModel)]="searchQuery"
-        (keyup.enter)="onSearch()"
-        class="search-input"
-      />
+      <input type="text" placeholder="Search questions..."
+        [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" class="search-input"/>
       <button class="search-btn" (click)="onSearch()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
@@ -23,19 +18,20 @@
       </button>
     </div>
 
-    <!-- Right actions -->
-    <div class="nav-actions">
+    <!-- Desktop actions -->
+    <div class="nav-actions" [class.open]="menuOpen">
 
       <!-- Guest -->
       <ng-container *ngIf="!isLoggedIn">
-        <a routerLink="/login"    class="nav-link">Login</a>
-        <a routerLink="/register" class="btn btn-primary btn-sm">Get Started</a>
+        <a routerLink="/login"    class="nav-link" (click)="menuOpen=false">Login</a>
+        <a routerLink="/register" class="btn btn-primary btn-sm" (click)="menuOpen=false">Get Started</a>
       </ng-container>
 
       <!-- Logged-in User -->
       <ng-container *ngIf="isLoggedIn && !isAdmin">
-        <a routerLink="/home" class="nav-link" routerLinkActive="active">Questions</a>
-        <a routerLink="/ask"  class="btn btn-primary btn-sm">+ Ask</a>
+        <a routerLink="/home"         class="nav-link" routerLinkActive="active" (click)="menuOpen=false">Questions</a>
+        <a routerLink="/my-questions" class="nav-link" routerLinkActive="active" (click)="menuOpen=false">My Questions</a>
+        <a routerLink="/ask"          class="btn btn-primary btn-sm" (click)="menuOpen=false">+ Ask</a>
         <div class="user-chip">
           <span class="user-avatar">{{ username.charAt(0).toUpperCase() }}</span>
           <span class="user-name">{{ username }}</span>
@@ -45,8 +41,8 @@
 
       <!-- Admin -->
       <ng-container *ngIf="isLoggedIn && isAdmin">
-        <a routerLink="/home"  class="nav-link" routerLinkActive="active">Browse</a>
-        <a routerLink="/admin" class="nav-admin-btn" routerLinkActive="active">
+        <a routerLink="/home"  class="nav-link" routerLinkActive="active" (click)="menuOpen=false">Browse</a>
+        <a routerLink="/admin" class="nav-admin-btn" routerLinkActive="active" (click)="menuOpen=false">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           </svg>
@@ -59,7 +55,13 @@
         </div>
         <button class="btn btn-ghost btn-sm" (click)="logout()">Logout</button>
       </ng-container>
+
     </div>
+
+    <!-- Sprint 2: Mobile hamburger button -->
+    <button class="hamburger" (click)="toggleMenu()" [class.is-open]="menuOpen">
+      <span></span><span></span><span></span>
+    </button>
 
   </div>
 </nav>
